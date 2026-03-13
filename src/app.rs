@@ -14,6 +14,19 @@ pub fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
     matches
 }
 
+fn search_case_insens<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
+    let query = &query.to_lowercase();
+    let mut matches = vec![];
+
+    for line in content.lines() {
+        if line.to_lowercase().contains(query) {
+            matches.push(line.trim());
+        }
+    }
+
+    matches
+}
+
 pub fn run(config: config::Config) -> Result<(), Box<dyn Error>> {
     let content = fs::read_to_string(config.file_path)?;
 
@@ -63,5 +76,18 @@ They'd banish us, you know.";
     fn no_match() {
         let query = "monophormization";
         assert!(search(query, POEM).is_empty());
+    }
+
+    #[test]
+    fn case_sensitive() {
+        let query = "BaNiSh";
+        assert!(search(query, POEM).is_empty());
+    }
+
+    #[test]
+    fn case_insensitive() {
+        let query = "aRe";
+        let matches = vec!["I'm nobody! Who are you?", "Are you nobody, too?"];
+        assert_eq!(matches, search_case_insens(query, POEM))
     }
 }
