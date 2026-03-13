@@ -30,7 +30,13 @@ fn search_case_insens<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
 pub fn run(config: config::Config) -> Result<(), Box<dyn Error>> {
     let content = fs::read_to_string(config.file_path)?;
 
-    for line in search(&config.query, &content) {
+    let matches = if config.ignore_case {
+        search_case_insens(&config.query, &content)
+    } else {
+        search(&config.query, &content)
+    };
+    
+    for line in matches {
         println!("{line}")
     }
 
