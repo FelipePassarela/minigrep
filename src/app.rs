@@ -46,4 +46,11 @@ They'd banish us, you know.";
         let query = "monophormization";
         assert!(search(query, POEM).is_empty());
     }
+
+    #[test]
+    fn case_insensitive() {
+        let query = "aRe";
+        let result = vec!["I'm nobody! Who are you?", "Are you nobody, too?"];
+        assert_eq!(result, search(query, POEM));
+    }
 }
