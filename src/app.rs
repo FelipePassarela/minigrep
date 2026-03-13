@@ -42,6 +42,24 @@ They'd banish us, you know.";
     }
 
     #[test]
+    fn multiple_results() {
+        let query = "you";
+        let result = vec![
+            "I'm nobody! Who are you?",
+            "Are you nobody, too?",
+            "They'd banish us, you know.",
+        ];
+        assert_eq!(result, search(query, POEM));
+    }
+
+    #[test]
+    fn substring() {
+        let query = "ban";
+        let result = vec!["They'd banish us, you know."];
+        assert_eq!(result, search(query, POEM))
+    }
+
+    #[test]
     fn no_result() {
         let query = "monophormization";
         assert!(search(query, POEM).is_empty());
