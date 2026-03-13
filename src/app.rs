@@ -3,15 +3,15 @@ use crate::config;
 use std::{error::Error, fs};
 
 pub fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
-    let mut result = vec![];
+    let mut matches = vec![];
 
     for line in content.lines() {
         if line.contains(query) {
-            result.push(line.trim());
+            matches.push(line.trim());
         }
     }
 
-    result
+    matches
 }
 
 pub fn run(config: config::Config) -> Result<(), Box<dyn Error>> {
@@ -35,32 +35,32 @@ Then there's a pair of us - don't tell!
 They'd banish us, you know.";
 
     #[test]
-    fn one_result() {
+    fn one_match() {
         let query = "there";
-        let result = vec!["Then there's a pair of us - don't tell!"];
-        assert_eq!(result, search(query, POEM));
+        let matches = vec!["Then there's a pair of us - don't tell!"];
+        assert_eq!(matches, search(query, POEM));
     }
 
     #[test]
-    fn multiple_results() {
+    fn multiple_matches() {
         let query = "you";
-        let result = vec![
+        let matches = vec![
             "I'm nobody! Who are you?",
             "Are you nobody, too?",
             "They'd banish us, you know.",
         ];
-        assert_eq!(result, search(query, POEM));
+        assert_eq!(matches, search(query, POEM));
     }
 
     #[test]
     fn substring() {
         let query = "ban";
-        let result = vec!["They'd banish us, you know."];
-        assert_eq!(result, search(query, POEM))
+        let matches = vec!["They'd banish us, you know."];
+        assert_eq!(matches, search(query, POEM))
     }
 
     #[test]
-    fn no_result() {
+    fn no_match() {
         let query = "monophormization";
         assert!(search(query, POEM).is_empty());
     }
