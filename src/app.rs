@@ -3,28 +3,18 @@ use crate::config;
 use std::{error::Error, fs};
 
 pub fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
-    let mut matches = vec![];
-
-    for line in content.lines() {
-        if line.contains(query) {
-            matches.push(line.trim());
-        }
-    }
-
-    matches
+    content
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 fn search_case_insens<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
     let query = &query.to_lowercase();
-    let mut matches = vec![];
-
-    for line in content.lines() {
-        if line.to_lowercase().contains(query) {
-            matches.push(line.trim());
-        }
-    }
-
-    matches
+    content
+        .lines()
+        .filter(|line| line.to_lowercase().contains(query))
+        .collect()
 }
 
 pub fn run(config: config::Config) -> Result<(), Box<dyn Error>> {
@@ -35,7 +25,7 @@ pub fn run(config: config::Config) -> Result<(), Box<dyn Error>> {
     } else {
         search(&config.query, &content)
     };
-    
+
     for line in matches {
         println!("{line}")
     }
