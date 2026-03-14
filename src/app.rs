@@ -2,7 +2,7 @@ use crate::config;
 
 use std::{error::Error, fs};
 
-pub fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
+fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
     content
         .lines()
         .filter(|line| line.contains(query))
